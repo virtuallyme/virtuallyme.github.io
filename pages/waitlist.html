@@ -75,33 +75,59 @@
       </div>
      </div>
      <div class="demo-hero-form-container" data-w-id="725cdfa6-723a-4038-04ae-3924b8ccaa40" style="opacity:0">
-      <div class="contact-form-block w-form">
-       <form class="contact-form" data-name="Contact Email Form" data-wf-element-id="3aaf4306-2f56-26bf-23c9-38bd3ef52254" data-wf-page-id="62dfe5160b55da4158214f0d" id="wf-form-Contact-Email-Form" method="get" name="wf-form-Contact-Email-Form">
-        <label class="contact-field-label" for="name">
-         Fill the form below
-         <span class="red-star-span">
-          *
-         </span>
-        </label>
-        <input class="contact-text-field name w-input" data-name="Name" id="name" maxlength="256" name="name" placeholder="Your full name" required="" type="text"/>
-        <input class="contact-text-field email w-input" data-name="Email Address" id="Email-Address-2" maxlength="256" name="Email-Address" placeholder="Enter your mail" required="" type="email"/>
-        <textarea class="contact-text-area w-input" data-name="Message" id="Message" maxlength="5000" name="Message" placeholder="A feature I would like is..."></textarea>
-        <div class="contact-form-privacy-text">
-         By clicking “Submit” you agree to our TOS and Privacy Policy.
+          <div class="contact-form-block w-form">
+            <form id="waitlistForm" class="contact-form" name="wf-form-Contact-Email-Form">
+                <label class="contact-field-label" for="name">
+                    Fill the form below
+                    <span class="red-star-span"> *</span>
+                </label>
+                <input class="contact-text-field name w-input" type="text" maxlength="256" name="name" placeholder="Your full name" id="name" required>
+                <input class="contact-text-field email w-input" type="email" maxlength="256" name="email" placeholder="Enter your mail" id="Email-Address-2" required>
+                <textarea class="contact-text-area w-input" maxlength="5000" name="featureRequest" placeholder="A feature I would like is..." id="Message"></textarea>
+                <div class="contact-form-privacy-text">
+                    By clicking “Submit” you agree to our TOS and Privacy Policy.
+                </div>
+                <input class="blue-button contact-form w-button" type="submit" value="I am interested!" data-wait="Please wait...">
+            </form>
+            <div class="contact-success-message w-form-done" style="display:none;">
+                <div>
+                    Thank you! Your submission has been received!
+                </div>
+            </div>
+            <div class="contact-error-message w-form-fail" style="display:none;">
+                <div>
+                    Oops! Something went wrong while submitting the form.
+                </div>
+            </div>
         </div>
-        <input class="blue-button contact-form w-button" data-wait="Please wait..." type="submit" value="I am interested!"/>
-       </form>
-       <div class="contact-success-message w-form-done">
-        <div>
-         Thank you! Your submission has been received!
-        </div>
-       </div>
-       <div class="contact-error-message w-form-fail">
-        <div>
-         Oops! Something went wrong while submitting the form.
-        </div>
-       </div>
-      </div>
+
+        <script>
+            document.getElementById('waitlistForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                var name = document.getElementById('name').value;
+                var email = document.getElementById('Email-Address-2').value;
+                var featureRequest = document.getElementById('Message').value;
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'https://33agwtxuy8.execute-api.us-east-1.amazonaws.com/dev/waitlist', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        // Handle success
+                        document.querySelector('.contact-success-message').style.display = 'block';
+                    } else if (xhr.readyState === 4) {
+                        // Handle error
+                        document.querySelector('.contact-error-message').style.display = 'block';
+                    }
+                };
+                xhr.send(JSON.stringify({
+                    email: email,
+                    name: name,
+                    featureRequest: featureRequest
+                }));
+            });
+        </script>
      </div>
     </div>
    </div>
